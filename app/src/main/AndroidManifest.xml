@@ -22,6 +22,7 @@
         </activity>
 
         <receiver android:name=".NotificationPublisher" />
+        <receiver android:name=".NotificationPublisher2" />
 
     </application>
 
