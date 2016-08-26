@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //scheduleNotification(10000);
-                scheduleNotification(getNotification("10 second delay"), 10000);
+                int id = NotificationID.getID();
+                scheduleNotification(getNotification("10 second delay", id), 10000,id);
+                id = NotificationID.getID();
+                scheduleNotification(getNotification("20 second delay",id), 20000,id);
             }
         });
 
@@ -57,17 +60,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void scheduleNotification(Notification notification, int delay) {
+    private void scheduleNotification(Notification notification, int delay,int id) {
         Intent notificationIntent = new Intent(this, NotificationPublisher2.class);
-        notificationIntent.putExtra(NotificationPublisher2.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher2.NOTIFICATION_ID, id);
         notificationIntent.putExtra(NotificationPublisher2.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
-    private Notification getNotification(String content) {
+
+
+
+    private Notification getNotification(String content,int id) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
@@ -75,15 +81,31 @@ public class MainActivity extends AppCompatActivity {
                         .setContentText(content)
                         .setAutoCancel(true);
         Intent resultIntent = new Intent(this, MainActivity.class);
-        resultIntent.putExtra(NotificationPublisher2.NOTIFICATION_TEXT,"test");
+        resultIntent.putExtra(NotificationPublisher2.NOTIFICATION_TEXT,"test "+id);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
-                0,
+                id,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         return mBuilder.build();
+
+//        Intent resultIntent = new Intent(this, MainActivity.class);
+//        resultIntent.putExtra(NotificationPublisher2.NOTIFICATION_TEXT,"test");
+//        PendingIntent resultPendingIntent = PendingIntent.getActivity(this,
+//                id, resultIntent,
+//                PendingIntent.FLAG_CANCEL_CURRENT);
+//
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+//        builder.setSmallIcon(R.mipmap.ic_launcher)
+//                        .setContentTitle("Title")
+//                        .setContentText(content)
+//                        .setAutoCancel(true);
+//        builder.setContentIntent(resultPendingIntent);
+//        return builder.build();
+
+
     }
 
 }

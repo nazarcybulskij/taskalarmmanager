@@ -14,7 +14,7 @@
         android:id="@+id/test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Test alarm 10 c" />
+        android:text="Test alarm 10 c  and 20 c " />
 
     <TextView
         android:id="@+id/text"
